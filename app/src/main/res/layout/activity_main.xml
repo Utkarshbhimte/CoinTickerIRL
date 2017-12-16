@@ -4,15 +4,30 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.bhimtemachine.cointickerirl.cointickerirl.MainActivity">
+    tools:context="com.bhimtemachine.cointickerirl.cointickerirl.MainActivity"
+    tools:layout_editor_absoluteY="81dp">
 
     <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Hello World!"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_width="576dp"
+        android:layout_height="42dp"
+        android:text="Select the coins you want to follow"
+        android:textAppearance="@android:style/TextAppearance.Material.Headline"
+        tools:layout_editor_absoluteX="9dp"
+        tools:layout_editor_absoluteY="4dp" />
+
+    <GridView
+        android:layout_width="577dp"
+        android:layout_height="451dp"
+        tools:layout_editor_absoluteX="8dp"
+        tools:layout_editor_absoluteY="53dp" />
+
+    <Button
+        android:id="@+id/button"
+        android:layout_width="127dp"
+        android:layout_height="50dp"
+        android:layout_marginRight="16dp"
+        android:text="Done"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        tools:layout_editor_absoluteY="0dp" />
 
 </android.support.constraint.ConstraintLayout>
