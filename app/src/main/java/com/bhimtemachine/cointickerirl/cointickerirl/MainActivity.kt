@@ -9,9 +9,14 @@ import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.NetworkImageView
 
 
+import android.widget.Button
 import android.widget.Toast
 import com.android.volley.toolbox.Volley
 
+import android.content.Intent;
+import android.view.View;
+
+import org.json.JSONObject;
 /**
  * Skeleton of an Android Things activity.
  *
@@ -52,5 +57,19 @@ class MainActivity : Activity() {
 
         requestQueue.add(request)
         requestQueue.start()
+
+    }
+
+
+    fun openCoinList( view: View ) {
+        val i = Intent(this, EditFormActivity::class.java)
+        startActivity(i)
+    }
+
+    fun showPrevCoin( view: View ) {
+        Toast.makeText(this, "This will show the Previous Coin", Toast.LENGTH_SHORT).show()
+    }
+    fun showNextCoin( view: View ) {
+        Toast.makeText(this, "This will show the Next Coin", Toast.LENGTH_SHORT).show()
     }
 }

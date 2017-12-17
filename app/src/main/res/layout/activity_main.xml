@@ -5,29 +5,69 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.bhimtemachine.cointickerirl.cointickerirl.MainActivity"
-    tools:layout_editor_absoluteY="81dp">
+    tools:layout_editor_absoluteY="90dp">
 
     <TextView
-        android:layout_width="576dp"
-        android:layout_height="42dp"
-        android:text="Select the coins you want to follow"
+        android:id="@+id/textView2"
+        android:layout_width="598dp"
+        android:layout_height="72dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginTop="8dp"
+        android:padding="16dp"
+        android:text="Bitcoin (BTC) 7.53%"
         android:textAppearance="@android:style/TextAppearance.Material.Headline"
-        tools:layout_editor_absoluteX="9dp"
-        tools:layout_editor_absoluteY="4dp" />
-
-    <GridView
-        android:layout_width="577dp"
-        android:layout_height="451dp"
-        tools:layout_editor_absoluteX="8dp"
-        tools:layout_editor_absoluteY="53dp" />
+        app:layout_constraintEnd_toStartOf="@+id/button"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/textView"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/button"
-        android:layout_width="127dp"
-        android:layout_height="50dp"
-        android:layout_marginRight="16dp"
-        android:text="Done"
-        app:layout_constraintRight_toRightOf="parent"
-        tools:layout_editor_absoluteY="0dp" />
+        style="@android:style/Widget.DeviceDefault.Button.Borderless"
+        android:layout_width="133dp"
+        android:layout_height="60dp"
+        android:layout_marginBottom="4dp"
+        android:layout_marginEnd="8dp"
+        android:onClick="openCoinList"
+        android:text="Edit Coin List"
+        app:layout_constraintBottom_toTopOf="@id/nextBtn"
+        app:layout_constraintRight_toRightOf="parent" />
+
+    <Button
+        android:id="@+id/nextBtn"
+        style="@android:style/Widget.DeviceDefault.Button.Borderless"
+        android:layout_width="241dp"
+        android:layout_height="335dp"
+        android:onClick="showNextCoin"
+        android:text=""
+        app:layout_constraintBottom_toBottomOf="@id/textView"
+        app:layout_constraintBottom_toTopOf="@id/textView2"
+        app:layout_constraintRight_toRightOf="@id/textView"
+        app:layout_constraintTop_toTopOf="@+id/textView"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <Button
+        android:id="@+id/backBtn"
+        style="@android:style/Widget.DeviceDefault.Button.Borderless"
+        android:layout_width="241dp"
+        android:layout_height="335dp"
+        android:onClick="showPrevCoin"
+        android:text=""
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/textView" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="match_parent"
+        android:layout_height="335dp"
+        android:gravity="center_vertical|center"
+        android:padding="16dp"
+        android:text="$19,000"
+        android:textAlignment="center"
+        android:textSize="144sp"
+        app:layout_constraintTop_toBottomOf="@id/textView2"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
 </android.support.constraint.ConstraintLayout>
