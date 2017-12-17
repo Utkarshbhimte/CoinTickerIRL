@@ -5,7 +5,7 @@ import android.os.Bundle
 
 import com.android.volley.Request
 import com.android.volley.Response
-import com.android.volley.toolbox.JsonObjectRequest
+import com.android.volley.toolbox.JsonArrayRequest
 import com.android.volley.toolbox.NetworkImageView
 
 
@@ -21,6 +21,8 @@ import java.util.TimerTask;
 
 
 import org.json.JSONObject;
+
+import kotlinx.android.synthetic.main.activity_main.*
 /**
  * Skeleton of an Android Things activity.
  *
@@ -51,16 +53,22 @@ class MainActivity : Activity() {
 
         val requestQueue = Volley.newRequestQueue(this@MainActivity)
 
-        val request = JsonObjectRequest(Request.Method.GET, url, null,
-                Response.Listener { response ->
-                    Toast.makeText(this, "Data came through!", Toast.LENGTH_SHORT).show()
-                },
-                Response.ErrorListener {
-                    Toast.makeText(this, "That didn't work!", Toast.LENGTH_SHORT).show()
-                })
+        try{
+            val request = JsonArrayRequest(Request.Method.GET, url, null,
+                    Response.Listener { response ->
+                        Toast.makeText(this, "Data came through!", Toast.LENGTH_SHORT).show()
+                    },
+                    Response.ErrorListener {
+                        e ->
+                        Toast.makeText(this, "That didn't work!", Toast.LENGTH_SHORT).show()
+                        android.util.Log.e("tag", "That didn't work!, $e")
+                    })
 
-        requestQueue.add(request)
-        requestQueue.start()
+            requestQueue.add(request)
+            requestQueue.start()
+        }catch(e: Exception){
+            e.printStackTrace()
+        }
 
         //  Interval function to switch between coins
         Timer().scheduleAtFixedRate(object : TimerTask() {
@@ -72,7 +80,7 @@ class MainActivity : Activity() {
     }
 
     fun changeCoin (){
-        android.util.Log.i("tag", "A Kiss every 5 seconds")
+        android.util.Log.i("tag", "Coin change, mama")
     }
 
     fun openCoinList( view: View ) {
