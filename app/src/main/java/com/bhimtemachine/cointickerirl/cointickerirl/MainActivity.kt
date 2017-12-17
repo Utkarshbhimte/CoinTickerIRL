@@ -16,6 +16,10 @@ import com.android.volley.toolbox.Volley
 import android.content.Intent;
 import android.view.View;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
+
 import org.json.JSONObject;
 /**
  * Skeleton of an Android Things activity.
@@ -58,8 +62,18 @@ class MainActivity : Activity() {
         requestQueue.add(request)
         requestQueue.start()
 
+        //  Interval function to switch between coins
+        Timer().scheduleAtFixedRate(object : TimerTask() {
+            override fun run() {
+                changeCoin ()
+            }
+        }, 0, 3000)
+
     }
 
+    fun changeCoin (){
+        android.util.Log.i("tag", "A Kiss every 5 seconds")
+    }
 
     fun openCoinList( view: View ) {
         val i = Intent(this, EditFormActivity::class.java)
