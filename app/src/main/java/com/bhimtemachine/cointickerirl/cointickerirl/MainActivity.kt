@@ -23,6 +23,8 @@ import java.util.TimerTask;
 import org.json.JSONObject;
 
 import kotlinx.android.synthetic.main.activity_main.*
+import org.json.JSONArray
+
 /**
  * Skeleton of an Android Things activity.
  *
@@ -49,7 +51,7 @@ class MainActivity : Activity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val url = "https://api.coinmarketcap.com/v1/ticker/?limit=10"
+        val url = "https://api.coinmarketcap.com/v1/ticker/?limit=4"
 
         val requestQueue = Volley.newRequestQueue(this@MainActivity)
 
@@ -57,6 +59,17 @@ class MainActivity : Activity() {
             val request = JsonArrayRequest(Request.Method.GET, url, null,
                     Response.Listener { response ->
                         Toast.makeText(this, "Data came through!", Toast.LENGTH_SHORT).show()
+
+                        for(i in 0..(response.length() - 1)){
+                            val coin =  response.getJSONObject(i)
+
+                            val coinName = coin.optString("name").toString();
+                            val coinSymbol = coin.optString("symbol").toString();
+                            val price = coin.optString("price_usd").toString();
+                            val priceChange = coin.optString("percent_change_24h").toString();
+                            android.util.Log.i("tag", "Coin Data:   $coinName ($coinSymbol): $price [$priceChange]")
+                        }
+
                     },
                     Response.ErrorListener {
                         e ->
@@ -71,11 +84,11 @@ class MainActivity : Activity() {
         }
 
         //  Interval function to switch between coins
-        Timer().scheduleAtFixedRate(object : TimerTask() {
-            override fun run() {
-                changeCoin ()
-            }
-        }, 0, 3000)
+//        Timer().scheduleAtFixedRate(object : TimerTask() {
+//            override fun run() {
+//                changeCoin ()
+//            }
+//        }, 0, 3000)
 
     }
 
