@@ -51,9 +51,8 @@ class MainActivity : Activity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val url = "https://api.coinmarketcap.com/v1/ticker/?limit=4"
 
-        val coinData = kotlin.collections.ArrayList()
+//        val coinData = kotlin.collections.ArrayList()
 
         //  Fetching new Coin data and updating it every 5 minutes
         Timer().scheduleAtFixedRate(object : TimerTask() {
@@ -74,7 +73,9 @@ class MainActivity : Activity() {
 
 
     //  Function to fetch new coin data
-    private fun fetchCoinData{
+    private fun fetchCoinData(){
+        val url = "https://api.coinmarketcap.com/v1/ticker/?limit=4"
+
         val requestQueue = Volley.newRequestQueue(this@MainActivity)
 
         val request = JsonArrayRequest(Request.Method.GET, url, null,
