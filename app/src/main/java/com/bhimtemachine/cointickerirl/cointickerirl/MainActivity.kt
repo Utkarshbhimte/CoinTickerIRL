@@ -53,37 +53,17 @@ class MainActivity : Activity() {
 
         val url = "https://api.coinmarketcap.com/v1/ticker/?limit=4"
 
-        val requestQueue = Volley.newRequestQueue(this@MainActivity)
+        val coinData = kotlin.collections.ArrayList()
 
-        try{
-            val request = JsonArrayRequest(Request.Method.GET, url, null,
-                    Response.Listener { response ->
-                        Toast.makeText(this, "Data came through!", Toast.LENGTH_SHORT).show()
+        //  Fetching new Coin data and updating it every 5 minutes
+        Timer().scheduleAtFixedRate(object : TimerTask() {
+            override fun run() {
+                fetchCoinData()
+            }
+        }, 0, 300000)
 
-                        for(i in 0..(response.length() - 1)){
-                            val coin =  response.getJSONObject(i)
 
-                            val coinName = coin.optString("name").toString();
-                            val coinSymbol = coin.optString("symbol").toString();
-                            val price = coin.optString("price_usd").toString();
-                            val priceChange = coin.optString("percent_change_24h").toString();
-                            android.util.Log.i("tag", "Coin Data:   $coinName ($coinSymbol): $price [$priceChange]")
-                        }
-
-                    },
-                    Response.ErrorListener {
-                        e ->
-                        Toast.makeText(this, "That didn't work!", Toast.LENGTH_SHORT).show()
-                        android.util.Log.e("tag", "That didn't work!, $e")
-                    })
-
-            requestQueue.add(request)
-            requestQueue.start()
-        }catch(e: Exception){
-            e.printStackTrace()
-        }
-
-        //  Interval function to switch between coins
+//        Interval function to iterate over coinData
 //        Timer().scheduleAtFixedRate(object : TimerTask() {
 //            override fun run() {
 //                changeCoin ()
@@ -92,18 +72,63 @@ class MainActivity : Activity() {
 
     }
 
+
+    //  Function to fetch new coin data
+    private fun fetchCoinData{
+        val requestQueue = Volley.newRequestQueue(this@MainActivity)
+
+        val request = JsonArrayRequest(Request.Method.GET, url, null,
+                Response.Listener { response ->
+                    Toast.makeText(this, "Data came through!", Toast.LENGTH_SHORT).show()
+//                    val newCoinData = kotlin.collections.ArrayList()
+
+                    for(i in 0..(response.length() - 1)){
+                        val coinObject =  response.getJSONObject(i)
+
+                        val coinName = coinObject.optString("name").toString();
+                        val coinSymbol = coinObject.optString("symbol").toString();
+                        val price = coinObject.optString("price_usd").toString();
+                        val priceChange = coinObject.optString("percent_change_24h").toString();
+
+//                        newCoinData.add(coin("7.2", "San Francisco", "Feb 2, 2016"))
+
+                        android.util.Log.i("tag", "Coin Data:   $coinName ($coinSymbol): $price [$priceChange]")
+                    }
+
+                },
+                Response.ErrorListener {
+                    e ->
+                    Toast.makeText(this, "That didn't work!", Toast.LENGTH_SHORT).show()
+                    android.util.Log.e("tag", "That didn't work!, $e")
+                })
+
+        requestQueue.add(request)
+        requestQueue.start()
+    }
+
+    //  Coin Class
+    fun coin (coinName: String, coinSymbol: String, price: String, priceChange: String){
+    }
+
+
+    //  Function that will change the text on the views with the next coin in the queue
     fun changeCoin (){
         android.util.Log.i("tag", "Coin change, mama")
     }
 
+    //  Redirecting to the EditFormActivity
     fun openCoinList( view: View ) {
         val i = Intent(this, EditFormActivity::class.java)
         startActivity(i)
     }
 
+    //  Function that will show the previous coin in the queue
     fun showPrevCoin( view: View ) {
         Toast.makeText(this, "This will show the Previous Coin", Toast.LENGTH_SHORT).show()
     }
+
+
+    //  Function that will show the next coin in the queue
     fun showNextCoin( view: View ) {
         Toast.makeText(this, "This will show the Next Coin", Toast.LENGTH_SHORT).show()
     }
