@@ -3,7 +3,9 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/CoinTickerIRL.iml" filepath="$PROJECT_DIR$/CoinTickerIRL.iml" />
+      <module fileurl="file://B:\Code\AndroidProjects\CoinTickerIRL\CoinTickerIRL.iml" filepath="B:\Code\AndroidProjects\CoinTickerIRL\CoinTickerIRL.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://B:\Code\AndroidProjects\CoinTickerIRL\app\app.iml" filepath="B:\Code\AndroidProjects\CoinTickerIRL\app\app.iml" />
     </modules>
   </component>
 </project>

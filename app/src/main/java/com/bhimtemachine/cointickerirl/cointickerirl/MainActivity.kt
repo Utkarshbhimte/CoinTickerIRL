@@ -1,33 +1,23 @@
 package com.bhimtemachine.cointickerirl.cointickerirl
 
+
+import android.annotation.SuppressLint
 import android.app.Activity
-import android.os.Bundle
-
-import com.android.volley.Request
-import com.android.volley.Response
-import com.android.volley.toolbox.JsonArrayRequest
-import com.android.volley.toolbox.NetworkImageView
-
-
-import android.widget.Button
-import android.widget.Toast
-import com.android.volley.toolbox.Volley
-
-import android.content.Intent;
+import android.content.Intent
 import android.graphics.Color
+import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.view.View;
-
-import java.util.Timer;
-import java.util.TimerTask;
-
-
-import org.json.JSONObject;
-
+import android.view.View
+import android.widget.Toast
+import com.bhimtemachine.cointickerirl.model.CoinDataResponse
+import com.bhimtemachine.cointickerirl.network.CoinMarketAPI
 import kotlinx.android.synthetic.main.activity_main.*
-import org.json.JSONArray
-
+import retrofit2.Call
+import retrofit2.Callback
+import java.util.Timer
+import java.util.TimerTask
+import kotlin.collections.ArrayList
 
 
 /**
@@ -62,51 +52,24 @@ class MainActivity : Activity() {
     }
 
 
-    private var currentIndex = 0;
+    private var currentIndex = 0
 
-    private var coinData = JSONArray()
+    private var coinData: ArrayList<CoinDataResponse>? = ArrayList()
 
     //  Function to fetch new coin data
-    private fun fetchCoinData(){
-
-        val url = "https://api.coinmarketcap.com/v1/ticker/?limit=10 "
-
-        //  Initiating request queue here
-        val requestQueue = Volley.newRequestQueue(this@MainActivity)
-
-        val request = JsonArrayRequest(Request.Method.GET, url, null,
-                Response.Listener { response ->
-                    Toast.makeText(this, "Data came through!", Toast.LENGTH_SHORT).show()
-
-                    //  Creating a empty JSONArray to switch with the current coinData JSONArray with new data
-                    val newCoinData = JSONArray()
-
-                    for(i in 0..(response.length() - 1)){
-                        val coinObject =  response.getJSONObject(i)
-
-                        //  Creating another JSON Object to get only those keys which are usefull for the app
-                        val coin = JSONObject()
-                        coin.put("name", coinObject.optString("name").toString())
-                        coin.put( "symbol",coinObject.optString("symbol").toString())
-                        coin.put( "price_usd",coinObject.optString("price_usd").toString())
-                        coin.put( "percent_change_24h",coinObject.optString("percent_change_24h").toString())
-
-                        //  Adding to the JSONArray
-                        newCoinData.put(coin)
-                    }
-
-                    //  Giving the new data to the main Object
-                    coinData = newCoinData
-                },
-                Response.ErrorListener {
-                    e ->
-                    Toast.makeText(this, "That didn't work!", Toast.LENGTH_SHORT).show()
-                    android.util.Log.e("tag", "That didn't work!, $e")
-                })
-
-        requestQueue.add(request)
-        requestQueue.start()
-
+    private fun fetchCoinData() {
+        val coinMarketApi = CoinMarketAPI.retrofit.create(CoinMarketAPI::class.java)
+        val coinMarketCall = coinMarketApi.coinData()
+        coinMarketCall.enqueue(object : Callback<ArrayList<CoinDataResponse>> {
+            override fun onResponse(call: Call<ArrayList<CoinDataResponse>>?, response: retrofit2.Response<ArrayList<CoinDataResponse>>?) {
+                if(response != null && response.isSuccessful) {
+                    coinData = response.body()
+                }
+            }
+            override fun onFailure(call: Call<ArrayList<CoinDataResponse>>?, t: Throwable?) {
+                // What if it couldn't fetch data?
+            }
+        })
     }
 
 
@@ -128,24 +91,21 @@ class MainActivity : Activity() {
 
     }
 
+    @SuppressLint("SetTextI18n")
     //  Temp function to just show bitcoin price
-    fun showCoin(coinObject: JSONObject){
-        val coinName = coinObject.optString("name").toString()
-        val coinSymbol = coinObject.optString("symbol").toString()
-        val price = coinObject.optString("price_usd").toString()
-        val priceChange = coinObject.optString("percent_change_24h").toString()
-        val profitInLast24 = coinObject.optDouble("percent_change_24h").toDouble() > 0
+    private fun showCoin(coinObject: CoinDataResponse){
+        val profitInLast24 = coinObject.percentChangeDay.toDouble()
 
         val handler = Handler(Looper.getMainLooper()) // write in onCreate function
 
         //below piece of code is written in function of class that extends from AsyncTask
         handler.post(Runnable {
-            CoinLabel.text = "$coinName ($coinSymbol)   $priceChange"
-            PriceView.text = "$" + price
+            CoinLabel.text = "${coinObject.name} (${coinObject.symbol})   $profitInLast24"
+            PriceView.text = coinObject.priceUsd
 
             //  To give color on the basis of price change in last 24 hours
-            if(!!profitInLast24){
-                PriceView.setTextColor(Color.GREEN)
+            if(profitInLast24 != 0.0){
+                PriceView.setTextColor(Color.WHITE)
             }else{
                 PriceView.setTextColor(Color.RED)
             }
@@ -153,23 +113,15 @@ class MainActivity : Activity() {
 
     }
 
-    // class Coin
-    data class Coin(
-            val coinName: String,
-            val coinSymbol: String,
-            val price: String,
-            val priceChange: String
-    )
-
     //  Function that will change the text on the views with the next coin in the queue
     fun changeCoin (index: Int){
 
-        if(coinData.length() > 0) {
-            val coinObject = coinData.getJSONObject(index)
+        if(coinData!!.size > 0) {
+            val coinObject = coinData!![index]
 
             showCoin(coinObject)
 
-            if(currentIndex < coinData.length() - 1) currentIndex++
+            if(currentIndex < coinData!!.size - 1) currentIndex++
             else currentIndex = 0
 
         }
