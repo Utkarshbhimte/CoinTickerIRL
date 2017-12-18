@@ -8,7 +8,7 @@
         <uses-library android:name="com.google.android.things" />
 
         <activity android:name=".MainActivity"
-            android:label=""
+            android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
             >
 
             <!-- Launch activity as default from Android Studio -->
