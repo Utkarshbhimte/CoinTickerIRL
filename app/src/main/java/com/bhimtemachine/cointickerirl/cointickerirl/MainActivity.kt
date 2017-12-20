@@ -69,7 +69,7 @@ class MainActivity : Activity() {
     //  Function to fetch new coin data
     private fun fetchCoinData(){
 
-        val url = "https://api.coinmarketcap.com/v1/ticker/?limit=10 "
+        val url = "https://api.coinmarketcap.com/v1/ticker/?limit=10"
 
         //  Initiating request queue here
         val requestQueue = Volley.newRequestQueue(this@MainActivity)
@@ -90,6 +90,7 @@ class MainActivity : Activity() {
                         coin.put( "symbol",coinObject.optString("symbol").toString())
                         coin.put( "price_usd",coinObject.optString("price_usd").toString())
                         coin.put( "percent_change_24h",coinObject.optString("percent_change_24h").toString())
+                        coin.put( "percent_change_1h",coinObject.optString("percent_change_1h").toString())
 
                         //  Adding to the JSONArray
                         newCoinData.put(coin)
@@ -100,7 +101,7 @@ class MainActivity : Activity() {
                 },
                 Response.ErrorListener {
                     e ->
-                    Toast.makeText(this, "That didn't work!", Toast.LENGTH_SHORT).show()
+                    CoinLabel.text = "Some error. Try Again ;|"
                     android.util.Log.e("tag", "That didn't work!, $e")
                 })
 
@@ -133,20 +134,26 @@ class MainActivity : Activity() {
         val coinName = coinObject.optString("name").toString()
         val coinSymbol = coinObject.optString("symbol").toString()
         val price = coinObject.optString("price_usd").toString()
-        val priceChange = coinObject.optString("percent_change_24h").toString()
+        val priceChangeDay = coinObject.optString("percent_change_24h").toString()
+        val priceChange = coinObject.optString("percent_change_1h").toString()
         val profitInLast24 = coinObject.optDouble("percent_change_24h").toDouble() > 0
 
         val handler = Handler(Looper.getMainLooper()) // write in onCreate function
 
         //below piece of code is written in function of class that extends from AsyncTask
         handler.post(Runnable {
-            CoinLabel.text = "$coinName ($coinSymbol)   $priceChange"
+            CoinLabel.text = "$coinName ($coinSymbol)"
+        PercentView.text = "24: $priceChangeDay%            1:  ${priceChange}%"
             PriceView.text = "$" + price
 
             //  To give color on the basis of price change in last 24 hours
             if(!!profitInLast24){
+                CoinLabel.setTextColor(Color.GREEN)
+                PercentView.setTextColor(Color.GREEN)
                 PriceView.setTextColor(Color.GREEN)
             }else{
+                CoinLabel.setTextColor(Color.RED)
+                PercentView.setTextColor(Color.RED)
                 PriceView.setTextColor(Color.RED)
             }
         })
